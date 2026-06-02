@@ -17,6 +17,9 @@ export function IdleScreen() {
   const startProcessing = useScanStore((s) => s.startProcessing);
   const recent = useScanStore((s) => s.recent);
 
+  const today = new Date().toDateString();
+  const todayCount = recent.filter((c) => new Date(c.createdAt).toDateString() === today).length;
+
   const onCaptured = (img: CapturedImage) => {
     setCameraOpen(false);
     void startProcessing(img.uri, img.base64);
@@ -41,7 +44,7 @@ export function IdleScreen() {
             <Text style={styles.sublabel}>Card Scanner</Text>
           </View>
           <View style={styles.stat}>
-            <Text style={styles.statNum}>{recent.length}</Text>
+            <Text style={styles.statNum}>{todayCount}</Text>
             <Text style={styles.statLabel}>Today</Text>
           </View>
         </View>

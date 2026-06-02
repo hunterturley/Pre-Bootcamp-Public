@@ -26,11 +26,14 @@ export function ReviewScreen() {
   const pipelines = useScanStore((s) => s.pipelines);
   const updateDraft = useScanStore((s) => s.updateDraft);
   const toggleTag = useScanStore((s) => s.toggleTag);
+  const selectPipeline = useScanStore((s) => s.selectPipeline);
+  const selectStage = useScanStore((s) => s.selectStage);
   const push = useScanStore((s) => s.push);
   const reset = useScanStore((s) => s.reset);
 
   if (!draft) return null;
 
+  const selectedPipeline = pipelines.find((p) => p.id === draft.pipelineId);
   const confidencePct = Math.round(draft.confidence * 100);
   const syncing = draft.status === 'syncing';
 
@@ -129,7 +132,7 @@ export function ReviewScreen() {
           </View>
         </View>
 
-        {/* Pipeline picker */}
+        {/* Pipeline picker (live from /pipelines) */}
         <View style={styles.section}>
           <Text style={type.sectionLabel}>Pipeline</Text>
           <View style={styles.pills}>
@@ -138,13 +141,28 @@ export function ReviewScreen() {
                 key={p.id}
                 label={p.name}
                 active={draft.pipelineId === p.id}
-                onPress={() =>
-                  updateDraft({ pipelineId: p.id, pipelineStageId: p.stages[0]?.id })
-                }
+                onPress={() => selectPipeline(p.id)}
               />
             ))}
           </View>
         </View>
+
+        {/* Stage picker (only when the selected pipeline has multiple stages) */}
+        {selectedPipeline && selectedPipeline.stages.length > 1 && (
+          <View style={styles.section}>
+            <Text style={type.sectionLabel}>Stage</Text>
+            <View style={styles.pills}>
+              {selectedPipeline.stages.map((stage) => (
+                <Pill
+                  key={stage.id}
+                  label={stage.name}
+                  active={draft.pipelineStageId === stage.id}
+                  onPress={() => selectStage(stage.id)}
+                />
+              ))}
+            </View>
+          </View>
+        )}
 
         {/* Note */}
         <View style={styles.section}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScanTab } from '../screens/scan/ScanTab';
 import { StubScreen } from '../screens/StubScreen';
 import { useAuthStore } from '../store/authStore';
+import { useScanStore } from '../store/scanStore';
 import { colors, fonts, radii, type } from '../theme';
 
 const Tab = createBottomTabNavigator();
@@ -65,6 +66,15 @@ function SettingsScreen() {
 }
 
 export function RootTabs() {
+  const loadPipelines = useScanStore((s) => s.loadPipelines);
+  const loadHistory = useScanStore((s) => s.loadHistory);
+
+  // Once signed in, pull live pipelines and the persisted scan history.
+  useEffect(() => {
+    void loadPipelines();
+    void loadHistory();
+  }, [loadPipelines, loadHistory]);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
