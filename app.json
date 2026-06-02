@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Switchboard Card Scanner",
+    "slug": "switchboard-card-scanner",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "switchboard",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F6F5F2"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.switchboard.cardscanner",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Switchboard uses your camera to scan business cards.",
+        "NSPhotoLibraryUsageDescription": "Switchboard uses your photo library to import business card images."
+      }
+    },
+    "android": {
+      "package": "com.switchboard.cardscanner",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#F6F5F2"
+      },
+      "permissions": ["CAMERA", "READ_MEDIA_IMAGES"]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Switchboard uses your camera to scan business cards."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Switchboard uses your photo library to import business card images."
+        }
+      ]
+    ],
+    "extra": {
+      "apiBaseUrl": "https://api.switchboard.example/v1"
+    }
+  }
+}

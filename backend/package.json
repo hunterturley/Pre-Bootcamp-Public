@@ -1,0 +1,21 @@
+{
+  "name": "switchboard-card-scanner-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Thin proxy for OCR + Claude parse + GoHighLevel push. Holds all secret keys server-side.",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel deploy --prod",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
+    "axios": "^1.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@vercel/node": "^3.2.0",
+    "typescript": "~5.4.0"
+  }
+}
