@@ -8,6 +8,8 @@ import { DMMono_400Regular, DMMono_500Medium } from '@expo-google-fonts/dm-mono'
 import * as SplashScreen from 'expo-splash-screen';
 
 import { RootTabs } from './src/navigation/RootTabs';
+import { SignInScreen } from './src/screens/auth/SignInScreen';
+import { useAuthStore } from './src/store/authStore';
 import { colors } from './src/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -33,11 +35,19 @@ export default function App() {
     DMMono_500Medium,
   });
 
+  const authStatus = useAuthStore((s) => s.status);
+  const restore = useAuthStore((s) => s.restore);
+
+  // Restore any persisted session token once fonts are ready.
+  useEffect(() => {
+    void restore();
+  }, [restore]);
+
   useEffect(() => {
     if (loaded) SplashScreen.hideAsync().catch(() => {});
   }, [loaded]);
 
-  if (!loaded) {
+  if (!loaded || authStatus === 'restoring') {
     return (
       <View style={styles.loading}>
         <ActivityIndicator color={colors.accent} />
@@ -49,7 +59,7 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer theme={navTheme}>
         <StatusBar style="dark" />
-        <RootTabs />
+        {authStatus === 'signedIn' ? <RootTabs /> : <SignInScreen />}
       </NavigationContainer>
     </SafeAreaProvider>
   );

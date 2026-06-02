@@ -34,6 +34,20 @@ export async function clearSessionToken(): Promise<void> {
   await SecureStore.deleteItemAsync(SESSION_TOKEN_KEY);
 }
 
+export async function getSessionToken(): Promise<string | null> {
+  return SecureStore.getItemAsync(SESSION_TOKEN_KEY);
+}
+
+/**
+ * POST /auth — exchange an agent email for a session token and persist it.
+ * v1 is a dev placeholder; this maps to Switchboard identity in Phase 3.
+ */
+export async function signIn(email: string): Promise<string> {
+  const { data } = await http.post<{ token: string }>('/auth', { email });
+  await setSessionToken(data.token);
+  return data.token;
+}
+
 /** POST /scan — OCR + Claude parse. Returns structured draft fields. */
 export async function scanCard(imageBase64: string): Promise<ParsedCard> {
   const { data } = await http.post<ParsedCard>('/scan', { imageBase64 });

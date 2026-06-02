@@ -58,6 +58,34 @@ Anthropic, or GHL keys ever live in the mobile bundle** — every call goes
 through the proxy, which injects them server-side and routes to the agent's GHL
 location.
 
+## Run the whole loop locally (no keys)
+
+A dependency-free mock backend lets you exercise the full scan flow on a
+simulator without any OCR / Anthropic / GHL keys.
+
+```bash
+node backend/mock/server.mjs      # or: cd backend && npm run mock  -> :8787
+```
+
+Point the app at it via `expo.extra.apiBaseUrl` in `app.json`:
+
+- iOS simulator: `http://localhost:8787`
+- Android emulator: `http://10.0.2.2:8787`
+- Physical device: `http://<your-lan-ip>:8787`
+
+Then `npm start`. Sign in with any email (the mock accepts anything), scan or
+pick a photo, and watch it run `auth → scan → pipelines → push → success` with
+fake data. The mock rotates through a few sample cards.
+
+## Auth
+
+The app is gated by `authStore`: on launch it restores any persisted session
+token from `expo-secure-store`; with no token it shows the sign-in screen. Sign
+in POSTs the email to `/auth`, which returns a session token the proxy maps to
+the agent's CRM location (a dev placeholder in v1; real Switchboard accounts in
+Phase 3). Every API call carries the token as a bearer header. Sign out from the
+Settings tab clears it.
+
 ## Brand design tokens
 
 Defined once in `src/theme.ts` and used everywhere:

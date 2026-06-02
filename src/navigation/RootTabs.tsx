@@ -2,9 +2,13 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { ScanTab } from '../screens/scan/ScanTab';
 import { StubScreen } from '../screens/StubScreen';
-import { colors, fonts } from '../theme';
+import { useAuthStore } from '../store/authStore';
+import { colors, fonts, radii, type } from '../theme';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,12 +40,27 @@ function PipelineScreen() {
 }
 
 function SettingsScreen() {
+  const insets = useSafeAreaInsets();
+  const email = useAuthStore((s) => s.email);
+  const signOut = useAuthStore((s) => s.signOut);
+
   return (
-    <StubScreen
-      title="Settings"
-      icon="settings-outline"
-      blurb="Default tags, default pipeline, and your connected Switchboard account live here."
-    />
+    <View style={[styles.settings, { paddingTop: insets.top + 24 }]}>
+      <Text style={type.screenTitle}>Settings</Text>
+
+      <View style={styles.accountCard}>
+        <Text style={type.fieldKey}>Signed in as</Text>
+        <Text style={styles.email}>{email ?? 'Unknown account'}</Text>
+      </View>
+
+      <Text style={styles.note}>
+        Default tags, default pipeline, and account preferences are coming soon.
+      </Text>
+
+      <Pressable onPress={() => signOut()} style={styles.signOut}>
+        <Text style={styles.signOutText}>Sign out</Text>
+      </Pressable>
+    </View>
   );
 }
 
@@ -66,3 +85,28 @@ export function RootTabs() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  settings: { flex: 1, backgroundColor: colors.bg, paddingHorizontal: 20, gap: 18 },
+  accountCard: {
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.lineSoft,
+    borderRadius: radii.card,
+    padding: 16,
+    gap: 4,
+  },
+  email: { fontFamily: fonts.sansBold, fontSize: 16, color: colors.ink },
+  note: { fontFamily: fonts.sans, fontSize: 13, lineHeight: 19, color: colors.muted },
+  signOut: {
+    marginTop: 'auto',
+    marginBottom: 24,
+    alignItems: 'center',
+    paddingVertical: 14,
+    borderRadius: radii.button,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.card,
+  },
+  signOutText: { fontFamily: fonts.sansBold, fontSize: 14, color: colors.danger },
+});
