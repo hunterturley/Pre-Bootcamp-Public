@@ -58,6 +58,23 @@ Anthropic, or GHL keys ever live in the mobile bundle** — every call goes
 through the proxy, which injects them server-side and routes to the agent's GHL
 location.
 
+## View it in a browser (fastest, no keys)
+
+The app runs on the web and ships a built-in **demo mode**: when the configured
+API base URL is a placeholder (the default), the client serves canned data
+instead of calling a backend, so the whole flow is clickable with nothing else
+running.
+
+```bash
+npm run web          # opens the app in your browser
+# or build a static bundle to host anywhere:
+npx expo export --platform web   # outputs to dist/
+```
+
+Sign in with any email, pick a photo for the card, and click through
+`sign-in → scan → processing → review → success`. Demo mode also works in
+Expo Go on a phone.
+
 ## Run the whole loop locally (no keys)
 
 A dependency-free mock backend lets you exercise the full scan flow on a

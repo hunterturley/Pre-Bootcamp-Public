@@ -29,6 +29,11 @@
       },
       "permissions": ["CAMERA", "READ_MEDIA_IMAGES"]
     },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
     "plugins": [
       [
         "expo-camera",

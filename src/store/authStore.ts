@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import * as SecureStore from 'expo-secure-store';
 
 import { clearSessionToken, getSessionToken, signIn as apiSignIn } from '../api/client';
+import { deleteSecure, getSecure, setSecure } from '../storage/secure';
 
 /**
  * Session/auth state. The app is gated on this: until a token is restored or
@@ -38,7 +38,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ status: 'signedOut' });
       return;
     }
-    const email = await SecureStore.getItemAsync(EMAIL_KEY);
+    const email = await getSecure(EMAIL_KEY);
     set({ status: 'signedIn', email });
   },
 
@@ -51,7 +51,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ submitting: true, error: null });
     try {
       await apiSignIn(trimmed);
-      await SecureStore.setItemAsync(EMAIL_KEY, trimmed);
+      await setSecure(EMAIL_KEY, trimmed);
       set({ status: 'signedIn', email: trimmed, submitting: false });
     } catch (err) {
       set({
@@ -66,7 +66,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signOut: async () => {
     await clearSessionToken();
-    await SecureStore.deleteItemAsync(EMAIL_KEY);
+    await deleteSecure(EMAIL_KEY);
     set({ status: 'signedOut', email: null, error: null });
   },
 }));
